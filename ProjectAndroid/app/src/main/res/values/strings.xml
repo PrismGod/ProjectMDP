@@ -2,4 +2,9 @@
     <string name="app_name">ProjectAndroid</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+<!--    url nya pake urlnya masing masing ya :3-->
+<!--    <string name="url">http://???.???.???.?/myservice/master2.php</string>-->
+
+
 </resources>

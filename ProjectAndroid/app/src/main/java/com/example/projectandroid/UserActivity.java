@@ -15,38 +15,38 @@ public class UserActivity extends AppCompatActivity implements BottomNavigationV
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user);
+        setContentView(R.layout.activity_user2);
 
-        bn = findViewById(R.id.btmnav_user);
-        bn.setOnNavigationItemSelectedListener(UserActivity.this);
-        bn.setSelectedItemId(R.id.btmnavuser_movie);
+//        bn = findViewById(R.id.btmnav_user);
+//        bn.setOnNavigationItemSelectedListener(UserActivity.this);
+//        bn.setSelectedItemId(R.id.btmnavuser_movie);
 
-        Fragment f = new UserFavourite();
-        getSupportFragmentManager().beginTransaction().replace(R.id.FragmentUser,f).commit();
+//        Fragment f = new UserFavourite();
+//        getSupportFragmentManager().beginTransaction().replace(R.id.FragmentUser,f).commit();
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.btmnavuser_fav){
-            Fragment f=new UserFavourite();
-            getSupportFragmentManager().beginTransaction().replace(R.id.FragmentUser,f).commit();
-            return true;
-        }
-        if (item.getItemId() == R.id.btmnavuser_movie){
-            Fragment f=new UserMovieFragment();
-            getSupportFragmentManager().beginTransaction().replace(R.id.FragmentUser,f).commit();
-            return true;
-        }
-        if (item.getItemId() == R.id.btmnavuser_rating){
-            Fragment f=new UserRatingFragment();
-            getSupportFragmentManager().beginTransaction().replace(R.id.FragmentUser,f).commit();
-            return true;
-        }
-        if (item.getItemId() == R.id.btmnavuser_watchlist){
-            Fragment f=new UserWatchListFragment();
-            getSupportFragmentManager().beginTransaction().replace(R.id.FragmentUser,f).commit();
-            return true;
-        }
+//        if (item.getItemId() == R.id.btmnavuser_fav){
+//            Fragment f=new UserFavourite();
+//            getSupportFragmentManager().beginTransaction().replace(R.id.FragmentUser,f).commit();
+//            return true;
+//        }
+//        if (item.getItemId() == R.id.btmnavuser_movie){
+//            Fragment f=new UserMovieFragment();
+//            getSupportFragmentManager().beginTransaction().replace(R.id.FragmentUser,f).commit();
+//            return true;
+//        }
+//        if (item.getItemId() == R.id.btmnavuser_rating){
+//            Fragment f=new UserRatingFragment();
+//            getSupportFragmentManager().beginTransaction().replace(R.id.FragmentUser,f).commit();
+//            return true;
+//        }
+//        if (item.getItemId() == R.id.btmnavuser_watchlist){
+//            Fragment f=new UserWatchListFragment();
+//            getSupportFragmentManager().beginTransaction().replace(R.id.FragmentUser,f).commit();
+//            return true;
+//        }
         return false;
     }
 }

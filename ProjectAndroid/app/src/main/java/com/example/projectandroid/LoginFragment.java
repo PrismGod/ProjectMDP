@@ -13,6 +13,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -81,9 +97,75 @@ public class LoginFragment extends Fragment {
         b1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getActivity(),UserActivity.class);
-                startActivity(i);
+
+//                Intent i = new Intent(getActivity(),UserActivity.class);
+//                startActivity(i);
+                loginprocess();
             }
         });
+    }
+
+    private void loginprocess(){
+        StringRequest _StringRequest = new StringRequest(
+                Request.Method.POST,
+                getResources().getString(R.string.url),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        System.out.println(response);
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            int code = jsonObject.getInt("code");
+                            String message = jsonObject.getString("message");
+                            toaster(message);
+                            System.out.println(message);
+                            if(code==13)
+                            {
+                                Intent i=new Intent(getActivity(),AdminActivity.class);
+                                startActivity(i);
+                            }
+                            else if(code==1)
+                            {
+                                Intent i=new Intent(getActivity(),UserActivity.class);
+                                startActivity(i);
+//                                Intent i=new Intent(LoginActivity.this,MainActivity.class);
+//                                startActivity(i);
+////                                finish();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                //handle error
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        System.out.println(error);
+                    }
+                }
+        ){
+            @Nullable
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> params = new HashMap<>();
+                params.put("function","logins");
+                params.put("username",e1.getText().toString());
+                params.put("password",e2.getText().toString());
+                return params;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        requestQueue.add(_StringRequest);
+    }
+
+    public void toaster(String a)
+    {
+        Context context = requireActivity().getApplicationContext();
+        CharSequence text = a;
+        int duration = Toast.LENGTH_SHORT;
+        Toast toast = Toast.makeText(context, text, duration);
+        toast.show();
     }
 }
