@@ -33,21 +33,21 @@
                     $response["code"] = 13;
                     $response["message"] = "Login Successful As Admin";
                 } else {
-                    $sql_query = "SELECT * FROM users WHERE username = '$username' AND password = '$password' AND banned = 0";
-                    $result = mysqli_query($conn, $sql_query);
-                    $sql_query2 = "SELECT * FROM users WHERE username = '$username' AND password = '$password' AND banned = 1";
-                    $result2 = mysqli_query($conn, $sql_query2);
-                    if (mysqli_num_rows($result) > 0) {
-                        $response["code"] = 1;
-                        $response["message"] = "Login Successful As User";
-                    }
-                    else if (mysqli_num_rows($result2) > 0) {
-                        $response["code"] = -4;
-                        $response["message"] = "User Is banned please contact admin";
-                    }
-                    else {
+                    $sql_query = "SELECT * FROM users WHERE username = '$username' AND password = '$password'";
+                    $result = $conn->query($sql_query)->fetch_object();
+                    if ($result == null){
                         $response["code"] = -3;
                         $response["message"] = "Invalid Username or Password";
+                    }
+                    else{
+                        if ($result->banned == 0){
+                            $response["code"] = 1;
+                            $response["message"] = $result->username;
+                        }
+                        else{
+                            $response["code"] = -4;
+                            $response["message"] = "Your Account is Banned";
+                        }
                     }
                 }
             } else {
@@ -97,7 +97,7 @@
                 $response["message"] = "Data Inserted!";
             } else {
                 $response["code"] = -3;
-                $response["message"] = "User Allready Exist";
+                $response["message"] = "User Already Exist";
             }
         } else {
             $response["code"] = -2;

@@ -9,4 +9,10 @@
     <color name="white">#FFFFFFFF</color>
     <color name="CyanBlue">#FF0088FF</color>
     <color name="RedLogout">#FFFF0000</color>
+
+    <color name="PrimaryBlue">#1ea5ff</color>
+    <color name="PrimaryBlueVariant">#1566e0</color>
+
+    <color name="whiteSmoke">#f4f7fa</color>
+    <color name="lightGrey">#d3d3d3</color>
 </resources>
