@@ -16,6 +16,7 @@ import com.example.projectandroid.databinding.ActivityUserHomeBinding;
 import com.example.projectandroid.fragment.UserFavoriteFragment;
 import com.example.projectandroid.fragment.UserHomeFragment;
 import com.example.projectandroid.fragment.UserRatingFragment;
+import com.example.projectandroid.fragment.UserSearchFragment;
 import com.example.projectandroid.fragment.UserWatchListFragment;
 import com.google.android.material.navigation.NavigationBarView;
 
@@ -47,6 +48,9 @@ public class UserHomeActivity extends AppCompatActivity {
                         break;
                     case R.id.navRating:
                         fragment = UserRatingFragment.newInstance(username);
+                        break;
+                    case R.id.navSearch:
+                        fragment = UserSearchFragment.newInstance(username);
                         break;
                     default:
                         fragment = UserHomeFragment.newInstance(username);

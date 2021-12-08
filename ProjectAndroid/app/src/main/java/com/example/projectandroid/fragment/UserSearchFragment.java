@@ -1,5 +1,6 @@
 package com.example.projectandroid.fragment;
 
+import android.app.usage.UsageEvents;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -7,16 +8,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SearchView;
-import android.widget.Toast;
+import android.view.inputmethod.EditorInfo;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -24,10 +22,8 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.projectandroid.R;
 import com.example.projectandroid.activity.DetailMovieActivity;
-import com.example.projectandroid.activity.LoginActivity;
-import com.example.projectandroid.activity.RegisterActivity;
 import com.example.projectandroid.adapter.MovieAdapter;
-import com.example.projectandroid.databinding.FragmentUserHomeBinding;
+import com.example.projectandroid.databinding.FragmentSearchBinding;
 import com.example.projectandroid.model.Movie;
 
 import org.json.JSONArray;
@@ -38,26 +34,26 @@ import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link UserHomeFragment#newInstance} factory method to
+ * Use the {@link UserSearchFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class UserHomeFragment extends Fragment {
+public class UserSearchFragment extends Fragment {
 
     private static final String ARG_PARAM_USERNAME = "username";
 
     private String username;
-    int page = 1;
+    FragmentSearchBinding binding;
 
-    FragmentUserHomeBinding binding;
     ArrayList<Movie> movies = new ArrayList<>();
     MovieAdapter adapter;
 
-    public UserHomeFragment() {
+    public UserSearchFragment() {
         // Required empty public constructor
     }
 
-    public static UserHomeFragment newInstance(String username) {
-        UserHomeFragment fragment = new UserHomeFragment();
+
+    public static UserSearchFragment newInstance(String username) {
+        UserSearchFragment fragment = new UserSearchFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM_USERNAME, username);
         fragment.setArguments(args);
@@ -75,14 +71,13 @@ public class UserHomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = FragmentUserHomeBinding.inflate(inflater, container, false);
+        binding =FragmentSearchBinding.inflate(inflater,container,false);
         return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         binding.rvMovie.setLayoutManager(new GridLayoutManager(getContext(), 2));
         adapter = new MovieAdapter(movies, getContext());
         adapter.setOnItemClickCallback(new MovieAdapter.OnItemClickCallback() {
@@ -95,23 +90,23 @@ public class UserHomeFragment extends Fragment {
             }
         });
         binding.rvMovie.setAdapter(adapter);
-
-        loadPopularMovies(page);
-
-        binding.btnLoadMore.setOnClickListener(new View.OnClickListener() {
+        binding.edtSearchbar.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public void onClick(View view) {
-                page++;
-                loadPopularMovies(page);
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if (i == EditorInfo.IME_ACTION_SEND){
+                    movies.clear();
+                    doSearch();
+                    return true;
+                }
+                return false;
             }
         });
     }
 
-    private void loadPopularMovies(int page){
-        binding.progressBar.setVisibility(View.VISIBLE);
-        String url = getResources().getString(R.string.url_popular_now)
+    public void doSearch (){
+        String url = getResources().getString(R.string.url_search_movie)
                 + getResources().getString(R.string.API_KEY)
-                + "&language=en-US&page=" + page;
+                + "&language=en-US&query="+ binding.edtSearchbar.getText().toString() + "&page=1&include_adult=true";
 
         StringRequest request = new StringRequest(
                 Request.Method.GET,
@@ -135,7 +130,6 @@ public class UserHomeFragment extends Fragment {
                     }catch (JSONException ex){
                         ex.printStackTrace();
                     }
-                    binding.progressBar.setVisibility(View.GONE);
                 },
                 error -> {
 
@@ -145,5 +139,4 @@ public class UserHomeFragment extends Fragment {
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         requestQueue.add(request);
     }
-
 }
