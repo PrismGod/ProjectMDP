@@ -17,8 +17,10 @@
         <ImageView
             android:id="@+id/ivPosterMovie"
             android:layout_width="match_parent"
-            android:layout_height="250dp"
-            tools:src="@tools:sample/avatars"/>
+            android:layout_height="wrap_content"
+            tools:src="@tools:sample/avatars"
+            android:scaleType="fitXY"
+            android:adjustViewBounds="true"/>
 
         <TextView
             android:id="@+id/tvTitle"

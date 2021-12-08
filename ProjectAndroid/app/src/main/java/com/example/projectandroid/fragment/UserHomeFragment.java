@@ -1,5 +1,6 @@
 package com.example.projectandroid.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -18,6 +19,9 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.projectandroid.R;
+import com.example.projectandroid.activity.DetailMovieActivity;
+import com.example.projectandroid.activity.LoginActivity;
+import com.example.projectandroid.activity.RegisterActivity;
 import com.example.projectandroid.adapter.MovieAdapter;
 import com.example.projectandroid.databinding.FragmentUserHomeBinding;
 import com.example.projectandroid.model.Movie;
@@ -80,7 +84,10 @@ public class UserHomeFragment extends Fragment {
         adapter.setOnItemClickCallback(new MovieAdapter.OnItemClickCallback() {
             @Override
             public void onItemClicked(Movie movie) {
-                Toast.makeText(getContext(), movie.getTitle(), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getActivity(), DetailMovieActivity.class);
+                intent.putExtra("auth", username);
+                intent.putExtra("movieID", movie.getId());
+                startActivity(intent);
             }
         });
         binding.rvMovie.setAdapter(adapter);

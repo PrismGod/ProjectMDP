@@ -7,15 +7,16 @@
     <!--    <string name="url">http://???.???.???.?/myservice/master2.php</string>-->
 
     <!--    punya steven-->
-    <!--    <string name="url">http://10.0.2.2/projectMDP/master2.php</string>-->
+        <string name="url">http://10.0.2.2/projectMDP/master2.php</string>
 
     <!--    punya yen-->
-    <string name="url">http://192.168.1.7/projectMDP/master2.php</string>
+<!--    <string name="url">http://192.168.1.7/projectMDP/master2.php</string>-->
 
     <!--    API TMDB-->
     <string name="API_KEY">823dc6be5872a374c031c6e4773a2369</string>
     <string name="url_popular_now">https://api.themoviedb.org/3/movie/popular?api_key=</string>
     <string name="url_poster">https://image.tmdb.org/t/p/w500</string>
+    <string name="url_movie_detail">https://api.themoviedb.org/3/movie/</string>
 
 
     <string name="login">LOGIN</string>
@@ -32,6 +33,8 @@
     <string name="rating">Rating</string>
     <string name="popular_now">Popular Now</string>
     <string name="load_more">Load More</string>
+    <string name="addressing">Powered by TMDB API</string>
+    <string name="add_comment">Add Comment</string>
 
 
 </resources>
