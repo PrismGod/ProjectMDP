@@ -13,6 +13,9 @@
         android:theme="@style/Theme.ProjectAndroid"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".activity.detail_movie"
+            android:exported="true" />
+        <activity
             android:name=".activity.UserHomeActivity"
             android:exported="true" />
         <activity
