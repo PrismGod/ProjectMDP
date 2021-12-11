@@ -1,10 +1,12 @@
 package com.example.projectandroid.activity;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,11 +18,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.example.projectandroid.AdminActivity;
 import com.example.projectandroid.R;
 import com.example.projectandroid.databinding.ActivityDetailMovieBinding;
 import com.example.projectandroid.model.Movie;
@@ -29,12 +35,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class DetailMovieActivity extends AppCompatActivity {
 
     ActivityDetailMovieBinding binding;
-    EditText edtComment;
     String username;
     int movieID;
 
@@ -50,15 +57,119 @@ public class DetailMovieActivity extends AppCompatActivity {
         username = getIntent().getStringExtra("auth");
         movieID = getIntent().getIntExtra("movieID", 1);
         getMovieDetail(movieID);
-        edtComment = findViewById(R.id.edt_comment);
+        checkMovie(movieID);
 
-        edtComment.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        //  udah pake binding jadi kalo mau ambil component tinggal
+        //  binding.namaComponent aja
+        binding.edtComment.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                laporan(edtComment.getText().toString());
+                laporan(binding.edtComment.getText().toString());
                 return false;
             }
         });
+
+        binding.btnAddToWatchlist.setOnClickListener(this::onClick);
+    }
+
+    private void onClick(View view){
+        int viewID = view.getId();
+        if (viewID == R.id.btnAddToWatchlist){
+            addOrRemoveWatchlist();
+        }
+    }
+
+    private void addOrRemoveWatchlist(){
+        String function = binding.btnAddToWatchlist.getText().toString().equalsIgnoreCase("Add to Watchlist") ?
+                "addWatchlist" : "removeWatchlist";
+
+        StringRequest _StringRequest = new StringRequest(
+                Request.Method.POST,
+                getResources().getString(R.string.url_user),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        System.out.println(response);
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            String message = jsonObject.getString("message");
+                            laporan(message);
+
+                            if (binding.btnAddToWatchlist.getText().toString().equalsIgnoreCase("Add to Watchlist")){
+                                binding.btnAddToWatchlist.setText("Remove from Watchlist");
+                            }
+                            else{
+                                binding.btnAddToWatchlist.setText("Add to Watchlist");
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        System.out.println(error);
+                    }
+                }
+        ){
+            @Nullable
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> params = new HashMap<>();
+                params.put("function", function);
+                params.put("username", username);
+                params.put("movie_id", movieID+"");
+                return params;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(_StringRequest);
+    }
+
+    private void checkMovie(int id){
+        StringRequest _StringRequest = new StringRequest(
+                Request.Method.POST,
+                getResources().getString(R.string.url_user),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        System.out.println(response);
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            boolean addedToWatchlist = jsonObject.getBoolean("addedToWatchlist");
+                            if (addedToWatchlist){
+                                binding.btnAddToWatchlist.setText("Remove from Watchlist");
+                            }
+                            else{
+                                binding.btnAddToWatchlist.setText("Add to Watchlist");
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        System.out.println(error);
+                    }
+                }
+        ){
+            @Nullable
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> params = new HashMap<>();
+                params.put("function", "checkMovie");
+                params.put("username", username);
+                params.put("movie_id", movieID+"");
+                return params;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(_StringRequest);
     }
 
     @Override
@@ -113,15 +224,9 @@ public class DetailMovieActivity extends AppCompatActivity {
                                 .load(url_poster + backdrop_path)
                                 .into(binding.ivBackdrop);
 
-
-
-//                        JSONArray jsonArrayGenre = jsonObject.getJSONArray("genres");
-
-
                     }catch (JSONException ex){
                         ex.printStackTrace();
                     }
-//                    binding.progressBar.setVisibility(View.GONE);
                 },
                 error -> {
 

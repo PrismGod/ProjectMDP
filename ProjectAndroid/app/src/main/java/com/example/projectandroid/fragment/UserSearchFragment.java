@@ -113,10 +113,20 @@ public class UserSearchFragment extends Fragment {
                 url,
                 response -> {
                     try {
+                        System.out.println(response);
                         JSONObject jsonObject = new JSONObject(response);
                         JSONArray jsonArray = jsonObject.getJSONArray("results");
 
-                        for (int i=0; i<jsonArray.length(); i++){
+                        int size = jsonArray.length();
+                        if (size == 0){
+                            binding.tvResult.setText("There are no movies that matched your query.");
+                            binding.tvResult.setVisibility(View.VISIBLE);
+                            return;
+                        }
+
+                        binding.tvResult.setText("Showing results for \""+binding.edtSearchbar.getText().toString()+"\"");
+                        binding.tvResult.setVisibility(View.VISIBLE);
+                        for (int i=0; i<size; i++){
                             JSONObject itemObject = jsonArray.getJSONObject(i);
                             int id = itemObject.getInt("id");
                             String title = itemObject.getString("title");
