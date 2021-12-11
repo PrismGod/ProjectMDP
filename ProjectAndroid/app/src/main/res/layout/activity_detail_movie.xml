@@ -97,33 +97,34 @@
             android:id="@+id/btnContainer"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:layout_marginTop="10dp"
             android:layout_below="@+id/detailContainer"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal">
 
             <Button
                 android:id="@+id/btnAddToWatchlist"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:layout_marginHorizontal="5dp"
+                android:layout_weight="1"
                 android:backgroundTint="@color/PrimaryBlue"
                 android:text="Add To Watchlist"
                 android:textColor="@color/whiteSmoke"
-                app:icon="@drawable/ic_list_bulleted"
-                app:cornerRadius="10dp" />
+                app:cornerRadius="10dp"
+                app:icon="@drawable/ic_list_bulleted" />
 
             <Button
                 android:id="@+id/btnFavorite"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:layout_marginHorizontal="5dp"
+                android:layout_weight="1"
                 android:backgroundTint="@color/hotPink"
+                android:onClick="add_fav"
                 android:text="Favorite"
                 android:textColor="@color/whiteSmoke"
-                app:icon="@drawable/ic_favorite"
-                app:cornerRadius="10dp" />
+                app:cornerRadius="10dp"
+                app:icon="@drawable/ic_favorite" />
 
         </LinearLayout>
 
@@ -131,9 +132,9 @@
             android:id="@+id/edt_comment_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/btnContainer"
             android:layout_marginHorizontal="10dp"
             android:layout_marginVertical="20dp"
-            android:layout_below="@+id/btnContainer"
             android:background="@drawable/blue_border_rounded_corner">
 
             <EditText
@@ -160,9 +161,10 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="584dp"
             android:layout_below="@+id/edt_comment_container"
-            tools:listitem="@layout/rv_item_comment"/>
+            android:layout_marginTop="20dp"
+            tools:listitem="@layout/rv_item_comment" />
 
     </RelativeLayout>
 

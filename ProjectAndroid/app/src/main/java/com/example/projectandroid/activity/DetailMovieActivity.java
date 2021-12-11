@@ -6,8 +6,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -27,6 +34,7 @@ import java.util.Objects;
 public class DetailMovieActivity extends AppCompatActivity {
 
     ActivityDetailMovieBinding binding;
+    EditText edtComment;
     String username;
     int movieID;
 
@@ -42,6 +50,15 @@ public class DetailMovieActivity extends AppCompatActivity {
         username = getIntent().getStringExtra("auth");
         movieID = getIntent().getIntExtra("movieID", 1);
         getMovieDetail(movieID);
+        edtComment = findViewById(R.id.edt_comment);
+
+        edtComment.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                laporan(edtComment.getText().toString());
+                return false;
+            }
+        });
     }
 
     @Override
@@ -113,5 +130,13 @@ public class DetailMovieActivity extends AppCompatActivity {
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(request);
+    }
+
+    void laporan(String x){
+        Toast.makeText(this, x, Toast.LENGTH_SHORT).show();
+    }
+
+    public void add_fav(View view) {
+
     }
 }
