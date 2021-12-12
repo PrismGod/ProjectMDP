@@ -112,7 +112,7 @@ public class UserWatchListFragment extends Fragment {
                     public void onResponse(String response) {
                         System.out.println(response);
                         try {
-                            JSONObject jsonObject = new JSONObject(response);
+                        JSONObject jsonObject = new JSONObject(response);
                             int code = jsonObject.getInt("code");
                             if (code == 200){
                                 JSONArray movies_id = jsonObject.getJSONArray("result");

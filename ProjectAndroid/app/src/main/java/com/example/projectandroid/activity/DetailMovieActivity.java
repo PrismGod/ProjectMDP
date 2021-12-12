@@ -5,7 +5,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -28,13 +30,16 @@ import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.example.projectandroid.AdminActivity;
 import com.example.projectandroid.R;
+import com.example.projectandroid.adapter.CommentAdapter;
 import com.example.projectandroid.databinding.ActivityDetailMovieBinding;
+import com.example.projectandroid.model.Comment;
 import com.example.projectandroid.model.Movie;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -44,6 +49,9 @@ public class DetailMovieActivity extends AppCompatActivity {
     ActivityDetailMovieBinding binding;
     String username;
     int movieID;
+
+    ArrayList<Comment> comments = new ArrayList<>();
+    CommentAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,18 +68,76 @@ public class DetailMovieActivity extends AppCompatActivity {
         checkMovie(movieID);
         checkFavorite(movieID);
 
-        //  udah pake binding jadi kalo mau ambil component tinggal
-        //  binding.namaComponent aja
+        comments.clear();
+        loadComment();
+        binding.rvComment.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new CommentAdapter(comments);
+        binding.rvComment.setAdapter(adapter);
+
         binding.edtComment.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                laporan(binding.edtComment.getText().toString());
+//                laporan(binding.edtComment.getText().toString());
                 return false;
             }
         });
 
         binding.btnAddToWatchlist.setOnClickListener(this::onClick);
         binding.btnFavorite.setOnClickListener(this::onClick);
+    }
+
+//    @Override
+//    public void onResume(){
+//        super.onResume();
+//
+//        comments.clear();
+//        loadComment();
+//    }
+
+    private void loadComment(){
+        StringRequest _StringRequest = new StringRequest(
+                Request.Method.POST,
+                getResources().getString(R.string.url_comment),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        System.out.println(response);
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            int code = jsonObject.getInt("code");
+                            if (code == 200) {
+                                JSONArray arrUser = jsonObject.getJSONArray("username");
+                                JSONArray arrComm = jsonObject.getJSONArray("comment");
+                                for (int i=0; i<arrUser.length(); i++){
+                                    Comment comment = new Comment(arrUser.get(i) + "", arrComm.get(i) + "");
+                                    comments.add(comment);
+                                }
+                                adapter.notifyDataSetChanged();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        System.out.println(error);
+                    }
+                }
+        ){
+            @Nullable
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("function", "getComment");
+                params.put("movie_id", movieID + "");
+                return params;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(_StringRequest);
     }
 
     private void onClick(View view){

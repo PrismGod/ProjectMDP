@@ -17,6 +17,7 @@
     <string name="url">http://192.168.151.3/projectMDP/master2.php</string>
     <string name="url_user">http://192.168.151.3/projectMDP/UserController.php</string>
     <string name="url_favorite">http://192.168.151.3/projectMDP/UserFavorite.php</string>
+    <string name="url_comment">http://192.168.151.3/projectMDP/UserComment.php</string>
 
     <!--    API TMDB-->
     <string name="API_KEY">823dc6be5872a374c031c6e4773a2369</string>
