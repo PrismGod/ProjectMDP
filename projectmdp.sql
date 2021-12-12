@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 12 Des 2021 pada 08.14
+-- Waktu pembuatan: 12 Des 2021 pada 11.46
 -- Versi server: 10.4.20-MariaDB
 -- Versi PHP: 8.0.9
 
@@ -49,6 +49,28 @@ INSERT INTO `users` (`username`, `password`, `banned`) VALUES
 ('user2', 'user2', 0),
 ('user3', 'user3', 0),
 ('user4', 'user4', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `user_comment`
+--
+
+DROP TABLE IF EXISTS `user_comment`;
+CREATE TABLE `user_comment` (
+  `username` varchar(50) DEFAULT NULL,
+  `movie_id` varchar(11) DEFAULT NULL,
+  `comment` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data untuk tabel `user_comment`
+--
+
+INSERT INTO `user_comment` (`username`, `movie_id`, `comment`) VALUES
+('123', '634649', 'I cannot wait for this movie to be released.'),
+('asd', '580489', 'Very shocking post credit scene'),
+('123', '634649', 'Will this series be related to post credit scene of venom?');
 
 -- --------------------------------------------------------
 
