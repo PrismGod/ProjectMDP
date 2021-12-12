@@ -7,8 +7,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,7 +19,9 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,6 +57,9 @@ public class DetailMovieActivity extends AppCompatActivity {
 
     ArrayList<Comment> comments = new ArrayList<>();
     CommentAdapter adapter;
+    Button btnSubmit;
+    Dialog ratingDialog;
+    RatingBar ratingBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,8 +76,9 @@ public class DetailMovieActivity extends AppCompatActivity {
         checkMovie(movieID);
         checkFavorite(movieID);
 
-        comments.clear();
         loadComment();
+        loadRating();
+
         binding.rvComment.setLayoutManager(new LinearLayoutManager(this));
         adapter = new CommentAdapter(comments);
         binding.rvComment.setAdapter(adapter);
@@ -77,24 +86,93 @@ public class DetailMovieActivity extends AppCompatActivity {
         binding.edtComment.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-//                laporan(binding.edtComment.getText().toString());
+                if (i == EditorInfo.IME_ACTION_SEND){
+                    String comment = binding.edtComment.getText().toString();
+                    if (comment.isEmpty()){
+                        laporan("Your comment is empty");
+                        return false;
+                    }
+
+                    submitComment(comment);
+                    return true;
+                }
                 return false;
             }
         });
 
         binding.btnAddToWatchlist.setOnClickListener(this::onClick);
         binding.btnFavorite.setOnClickListener(this::onClick);
+        binding.btnRate.setOnClickListener(this::onClick);
+
+        ratingDialog = new Dialog(this);
+        ratingDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        ratingDialog.setContentView(R.layout.rating_dialog);
+
+        ratingBar = ratingDialog.findViewById(R.id.ratingBar);
+        btnSubmit = ratingDialog.findViewById(R.id.btnSubmit);
+        btnSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addOrUpdateRating(ratingBar.getRating());
+                ratingDialog.hide();
+            }
+        });
     }
 
-//    @Override
-//    public void onResume(){
-//        super.onResume();
-//
-//        comments.clear();
-//        loadComment();
-//    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (ratingDialog != null) {
+            ratingDialog.dismiss();
+            ratingDialog = null;
+        }
+    }
+
+    private void submitComment(String comment){
+        StringRequest _StringRequest = new StringRequest(
+                Request.Method.POST,
+                getResources().getString(R.string.url_comment),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        System.out.println(response);
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            String message = jsonObject.getString("message");
+                            System.out.println(message);
+
+                            loadComment();
+                            binding.edtComment.setText("");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        System.out.println(error);
+                    }
+                }
+        ){
+            @Nullable
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> params = new HashMap<>();
+                params.put("function", "addComment");
+                params.put("username", username);
+                params.put("movie_id", movieID+"");
+                params.put("comment", comment);
+                return params;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(_StringRequest);
+    }
 
     private void loadComment(){
+        comments.clear();
         StringRequest _StringRequest = new StringRequest(
                 Request.Method.POST,
                 getResources().getString(R.string.url_comment),
@@ -108,7 +186,7 @@ public class DetailMovieActivity extends AppCompatActivity {
                             if (code == 200) {
                                 JSONArray arrUser = jsonObject.getJSONArray("username");
                                 JSONArray arrComm = jsonObject.getJSONArray("comment");
-                                for (int i=0; i<arrUser.length(); i++){
+                                for (int i=arrUser.length()-1; i>=0; i--){
                                     Comment comment = new Comment(arrUser.get(i) + "", arrComm.get(i) + "");
                                     comments.add(comment);
                                 }
@@ -144,9 +222,115 @@ public class DetailMovieActivity extends AppCompatActivity {
         int viewID = view.getId();
         if (viewID == R.id.btnAddToWatchlist){
             addOrRemoveWatchlist();
-        } else if(viewID == R.id.btnFavorite){
+        }
+        else if(viewID == R.id.btnFavorite){
             addOrRemoveFavorite();
         }
+        else if (viewID == R.id.btnRate){
+            ratingDialog.show();
+        }
+    }
+
+    private void loadRating(){
+        StringRequest _StringRequest = new StringRequest(
+                Request.Method.POST,
+                getResources().getString(R.string.url_user),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        System.out.println(response);
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            String rating = jsonObject.getString("rating");
+                            if (rating.isEmpty()){
+                                binding.tvRating.setText("Rating : -");
+                            }
+                            else{
+                                binding.tvRating.setText("Rating : "+rating);
+                            }
+                            boolean ratedByUser = jsonObject.getBoolean("ratedByUser");
+                            if (ratedByUser){
+                                btnSubmit.setText("Update");
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        System.out.println(error);
+                    }
+                }
+        ){
+            @Nullable
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("function", "getRating");
+                params.put("username", username);
+                params.put("movie_id", movieID + "");
+                return params;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(_StringRequest);
+    }
+
+    private void addOrUpdateRating(float value){
+        String function = btnSubmit.getText().toString().equalsIgnoreCase("Submit") ?
+                "addRating" : "updateRating";
+
+        StringRequest _StringRequest = new StringRequest(
+                Request.Method.POST,
+                getResources().getString(R.string.url_user),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        System.out.println(response);
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            String message = jsonObject.getString("message");
+                            System.out.println(message);
+
+                            if (btnSubmit.getText().toString().equalsIgnoreCase("Submit")){
+                                btnSubmit.setText("Update");
+                            }
+                            else{
+                                btnSubmit.setText("Submit");
+                            }
+
+                            loadRating();
+                            ratingBar.setRating(0);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        System.out.println(error);
+                    }
+                }
+        ){
+            @Nullable
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> params = new HashMap<>();
+                params.put("function", function);
+                params.put("username", username);
+                params.put("movie_id", movieID+"");
+                params.put("rating", value+"");
+                return params;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(_StringRequest);
     }
 
     private void addOrRemoveWatchlist(){
@@ -403,9 +587,5 @@ public class DetailMovieActivity extends AppCompatActivity {
 
     void laporan(String x){
         Toast.makeText(this, x, Toast.LENGTH_SHORT).show();
-    }
-
-    public void add_fav(View view) {
-
     }
 }

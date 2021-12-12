@@ -70,10 +70,29 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/tvOverview"
+                android:id="@+id/tvRating"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tvGenre"
+                android:padding="5dp"
+                android:text="Rating : "
+                android:textColor="@color/whiteSmoke"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_star"
+                android:layout_below="@+id/tvGenre"
+                android:layout_toEndOf="@+id/tvRating"
+                android:layout_marginVertical="5dp"/>
+
+            <TextView
+                android:id="@+id/tvOverview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvRating"
                 android:padding="5dp"
                 android:text="Overview"
                 android:textColor="@color/whiteSmoke"
@@ -146,7 +165,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/btnRate"
             android:layout_marginHorizontal="10dp"
-            android:layout_marginVertical="20dp"
+            android:layout_marginVertical="10dp"
             android:background="@drawable/blue_border_rounded_corner">
 
             <EditText
@@ -156,7 +175,10 @@
                 android:layout_toEndOf="@+id/comment_icon"
                 android:background="@android:color/transparent"
                 android:hint="@string/add_comment"
+                android:imeOptions="actionSend"
                 android:maxLines="1"
+                android:lines="1"
+                android:inputType="text"
                 android:padding="15dp"
                 android:textCursorDrawable="@drawable/cursor_color"
                 android:textSize="16sp" />
@@ -176,7 +198,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/edt_comment_container"
-            android:layout_marginTop="20dp"
             tools:listitem="@layout/rv_item_comment" />
 
     </RelativeLayout>

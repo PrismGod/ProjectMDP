@@ -1,21 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragment.UserRatingFragment">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/textView4"
+            android:id="@+id/tvMyRatings"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="RATINGS"
-            android:textAlignment="center"
-            android:textSize="50dp" />
-    </LinearLayout>
-</FrameLayout>
+            android:layout_alignParentStart="true"
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginVertical="5dp"
+            android:text="My Ratings"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvRating"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvMyRatings"
+            tools:listitem="@layout/rv_item_rating"/>
+
+    </RelativeLayout>
+</ScrollView>
