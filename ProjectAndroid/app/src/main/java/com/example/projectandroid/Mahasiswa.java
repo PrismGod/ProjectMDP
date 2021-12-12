@@ -9,6 +9,7 @@ public class Mahasiswa {
         Username = username;
         Password = password;
         this.banned = banned;
+
     }
 
     public String getUsername() {

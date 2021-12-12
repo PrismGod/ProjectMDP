@@ -39,6 +39,12 @@ public class AdminActivity extends AppCompatActivity {
     MahasiswaAdapter _MahasiswaAdapter;
     Button blogout,bban,bunban;
     TextView tv;
+    public static String urldatabase;
+
+    static {
+        urldatabase = getResources().getString(R.string.url);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -246,7 +252,7 @@ public class AdminActivity extends AppCompatActivity {
         Toast toast = Toast.makeText(context, text, duration);
         toast.show();
     }
-
-
-
 }
+
+
+
