@@ -1,131 +1,118 @@
--- phpMyAdmin SQL Dump
--- version 5.1.1
--- https://www.phpmyadmin.net/
---
--- Host: 127.0.0.1
--- Waktu pembuatan: 12 Des 2021 pada 11.46
--- Versi server: 10.4.20-MariaDB
--- Versi PHP: 8.0.9
+/*
+SQLyog Ultimate v13.1.1 (64 bit)
+MySQL - 10.4.20-MariaDB : Database - projectmdp
+*********************************************************************
+*/
 
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
-SET time_zone = "+00:00";
+/*!40101 SET NAMES utf8 */;
 
+/*!40101 SET SQL_MODE=''*/;
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/`projectmdp` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
 
---
--- Database: `projectmdp`
---
-CREATE DATABASE IF NOT EXISTS `projectmdp` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `projectmdp`;
 
--- --------------------------------------------------------
+/*Table structure for table `movie_rating` */
 
---
--- Struktur dari tabel `users`
---
+DROP TABLE IF EXISTS `movie_rating`;
 
-DROP TABLE IF EXISTS `users`;
-CREATE TABLE `users` (
-  `username` varchar(50) NOT NULL,
-  `password` varchar(50) NOT NULL,
-  `banned` tinyint(1) NOT NULL
+CREATE TABLE `movie_rating` (
+  `username` varchar(50) DEFAULT NULL,
+  `movie_id` int(11) DEFAULT NULL,
+  `rating` float DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data untuk tabel `users`
---
+/*Data for the table `movie_rating` */
 
-INSERT INTO `users` (`username`, `password`, `banned`) VALUES
-('123', '123', 0),
-('123321', '123321', 0),
-('asd', 'asd', 0),
-('sylveon', 'ninfia', 0),
-('user1', 'user1', 0),
-('user2', 'user2', 0),
-('user3', 'user3', 0),
-('user4', 'user4', 0);
+insert  into `movie_rating`(`username`,`movie_id`,`rating`) values 
+('asd',580489,5),
+('asd',512195,4),
+('asd',617653,3.5),
+('123',580489,5),
+('123',512195,3);
 
--- --------------------------------------------------------
-
---
--- Struktur dari tabel `user_comment`
---
+/*Table structure for table `user_comment` */
 
 DROP TABLE IF EXISTS `user_comment`;
+
 CREATE TABLE `user_comment` (
   `username` varchar(50) DEFAULT NULL,
   `movie_id` varchar(11) DEFAULT NULL,
   `comment` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data untuk tabel `user_comment`
---
+/*Data for the table `user_comment` */
 
-INSERT INTO `user_comment` (`username`, `movie_id`, `comment`) VALUES
-('123', '634649', 'I cannot wait for this movie to be released.'),
-('asd', '580489', 'Very shocking post credit scene'),
-('123', '634649', 'Will this series be related to post credit scene of venom?');
+insert  into `user_comment`(`username`,`movie_id`,`comment`) values 
+('123','634649','I cannot wait for this movie to be released.'),
+('asd','580489','Very shocking post credit scene'),
+('123','634649','Will this series be related to post credit scene of venom?'),
+('asd','580489','wado mantap'),
+('asd','580489','nice btw');
 
--- --------------------------------------------------------
-
---
--- Struktur dari tabel `user_favorite`
---
+/*Table structure for table `user_favorite` */
 
 DROP TABLE IF EXISTS `user_favorite`;
+
 CREATE TABLE `user_favorite` (
   `username` varchar(50) DEFAULT NULL,
   `movie_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data untuk tabel `user_favorite`
---
+/*Data for the table `user_favorite` */
 
-INSERT INTO `user_favorite` (`username`, `movie_id`) VALUES
-('123', 580489),
-('123', 370172),
-('123', 634649);
+insert  into `user_favorite`(`username`,`movie_id`) values 
+('123',580489),
+('123',370172),
+('123',634649),
+('asd',568124),
+('asd',566525);
 
--- --------------------------------------------------------
-
---
--- Struktur dari tabel `user_watchlist`
---
+/*Table structure for table `user_watchlist` */
 
 DROP TABLE IF EXISTS `user_watchlist`;
+
 CREATE TABLE `user_watchlist` (
   `username` varchar(50) DEFAULT NULL,
   `movie_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data untuk tabel `user_watchlist`
---
+/*Data for the table `user_watchlist` */
 
-INSERT INTO `user_watchlist` (`username`, `movie_id`) VALUES
-('asd', 843241),
-('asd', 580489),
-('asd', 617653),
-('123', 580489);
+insert  into `user_watchlist`(`username`,`movie_id`) values 
+('asd',843241),
+('asd',580489),
+('asd',617653),
+('123',580489);
 
---
--- Indexes for dumped tables
---
+/*Table structure for table `users` */
 
---
--- Indeks untuk tabel `users`
---
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`username`);
-COMMIT;
+DROP TABLE IF EXISTS `users`;
 
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+CREATE TABLE `users` (
+  `username` varchar(50) NOT NULL,
+  `password` varchar(50) NOT NULL,
+  `banned` tinyint(1) NOT NULL,
+  PRIMARY KEY (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+/*Data for the table `users` */
+
+insert  into `users`(`username`,`password`,`banned`) values 
+('123','123',0),
+('123321','123321',0),
+('asd','asd',0),
+('sylveon','ninfia',0),
+('user1','user1',0),
+('user2','user2',0),
+('user3','user3',0),
+('user4','user4',0);
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;

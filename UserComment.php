@@ -9,9 +9,6 @@ if (isset($_POST["function"])) {
     if ($func == "addComment"){
         addComment($conn);
     }
-    // else if ($func == "removeComment"){
-        // removeComment($conn);
-    // }
     else if ($func == "getComment"){
         getComment($conn);
     }
@@ -37,21 +34,6 @@ function addComment($conn){
     }
     echo json_encode($response);
 }
-
-// function removeFavorite($conn){
-    // $username = $_POST["username"];
-    // $movie_id = $_POST["movie_id"];
-
-    // $q = "DELETE FROM user_favorite WHERE username='$username' AND movie_id=$movie_id";
-    // $result = $conn->query($q);
-    // if ($result){
-        // $response["message"] = "movie removed from favorite";
-    // }
-    // else{
-        // $response["message"] = "request failed";
-    // }
-    // echo json_encode($response);
-// }
 
 function getComment($conn){
     $movie_id = $_POST["movie_id"];
