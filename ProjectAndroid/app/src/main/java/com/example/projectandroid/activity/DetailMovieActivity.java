@@ -58,6 +58,7 @@ public class DetailMovieActivity extends AppCompatActivity {
         movieID = getIntent().getIntExtra("movieID", 1);
         getMovieDetail(movieID);
         checkMovie(movieID);
+        checkFavorite(movieID);
 
         //  udah pake binding jadi kalo mau ambil component tinggal
         //  binding.namaComponent aja
@@ -70,12 +71,15 @@ public class DetailMovieActivity extends AppCompatActivity {
         });
 
         binding.btnAddToWatchlist.setOnClickListener(this::onClick);
+        binding.btnFavorite.setOnClickListener(this::onClick);
     }
 
     private void onClick(View view){
         int viewID = view.getId();
         if (viewID == R.id.btnAddToWatchlist){
             addOrRemoveWatchlist();
+        } else if(viewID == R.id.btnFavorite){
+            addOrRemoveFavorite();
         }
     }
 
@@ -162,6 +166,100 @@ public class DetailMovieActivity extends AppCompatActivity {
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String,String> params = new HashMap<>();
                 params.put("function", "checkMovie");
+                params.put("username", username);
+                params.put("movie_id", movieID+"");
+                return params;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(_StringRequest);
+    }
+
+    private void addOrRemoveFavorite(){
+        String function = binding.btnFavorite.getText().toString().equalsIgnoreCase("Favorite") ?
+                "addFavorite" : "removeFavorite";
+
+        StringRequest _StringRequest = new StringRequest(
+                Request.Method.POST,
+                getResources().getString(R.string.url_favorite),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        System.out.println(response);
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            String message = jsonObject.getString("message");
+                            laporan(message);
+
+                            if (binding.btnFavorite.getText().toString().equalsIgnoreCase("Favorite")){
+                                binding.btnFavorite.setText("Unfavorite");
+                            }
+                            else{
+                                binding.btnFavorite.setText("Favorite");
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        System.out.println(error);
+                    }
+                }
+        ){
+            @Nullable
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> params = new HashMap<>();
+                params.put("function", function);
+                params.put("username", username);
+                params.put("movie_id", movieID+"");
+                return params;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(_StringRequest);
+    }
+
+    private void checkFavorite(int id){
+        StringRequest _StringRequest = new StringRequest(
+                Request.Method.POST,
+                getResources().getString(R.string.url_favorite),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        System.out.println(response);
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            boolean addedToFavorite = jsonObject.getBoolean("addedToFavorite");
+                            if (addedToFavorite){
+                                binding.btnFavorite.setText("Unfavorite");
+//                                binding.btnFavorite.setIcon(R.drawable.ic_favorited);
+                            }
+                            else{
+                                binding.btnFavorite.setText("Favorite");
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        System.out.println(error);
+                    }
+                }
+        ){
+            @Nullable
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> params = new HashMap<>();
+                params.put("function", "checkFavorite");
                 params.put("username", username);
                 params.put("movie_id", movieID+"");
                 return params;

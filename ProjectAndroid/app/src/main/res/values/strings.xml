@@ -7,14 +7,16 @@
     <!--    <string name="url">http://???.???.???.?/myservice/master2.php</string>-->
 
     <!--    punya steven-->
-    <string name="url">http://10.0.2.2/projectMDP/master2.php</string>
-    <string name="url_user">http://10.0.2.2/projectMDP/UserController.php</string>
+<!--    <string name="url">http://10.0.2.2/projectMDP/master2.php</string>-->
+<!--    <string name="url_user">http://10.0.2.2/projectMDP/UserController.php</string>-->
 
     <!--    punya yen-->
     <!--    <string name="url">http://192.168.1.8/projectMDP/master2.php</string>-->
 
     <!--    punya kevin-->
-<!--    <string name="url">http://192.168.151.3/ProjectMDP/master2.php</string>-->
+    <string name="url">http://192.168.151.3/projectMDP/master2.php</string>
+    <string name="url_user">http://192.168.151.3/projectMDP/UserController.php</string>
+    <string name="url_favorite">http://192.168.151.3/projectMDP/UserFavorite.php</string>
 
     <!--    API TMDB-->
     <string name="API_KEY">823dc6be5872a374c031c6e4773a2369</string>

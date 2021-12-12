@@ -41,9 +41,9 @@ public class AdminActivity extends AppCompatActivity {
     TextView tv;
     public static String urldatabase;
 
-    static {
-        urldatabase = getResources().getString(R.string.url);
-    }
+//    static {
+//        urldatabase = getResources().getString(R.string.url);
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
