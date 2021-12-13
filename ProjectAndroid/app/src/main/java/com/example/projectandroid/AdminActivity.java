@@ -40,6 +40,7 @@ public class AdminActivity extends AppCompatActivity {
     Button blogout,bban,bunban;
     TextView tv;
     public static String urldatabase;
+    String urldb;
 
 //    static {
 //        urldatabase = getResources().getString(R.string.url);
@@ -57,6 +58,9 @@ public class AdminActivity extends AppCompatActivity {
         rv.setAdapter(_MahasiswaAdapter);
 
         getALlMhs();
+
+        urldatabase = getResources().getString(R.string.url);
+        urldb = urldatabase;
 
         _MahasiswaAdapter.notifyDataSetChanged();
 
@@ -80,7 +84,7 @@ public class AdminActivity extends AppCompatActivity {
 
                 Intent i=new Intent(AdminActivity.this,AdminActivity.class);
                 startActivity(i);
-
+//                _MahasiswaAdapter.notifyDataSetChanged();
                 finish();
             }
         });
@@ -92,11 +96,17 @@ public class AdminActivity extends AppCompatActivity {
 
                 Intent i=new Intent(AdminActivity.this,AdminActivity.class);
                 startActivity(i);
-
+//                _MahasiswaAdapter.notifyDataSetChanged();
                 finish();
             }
         });
 
+        rv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                _MahasiswaAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     private void getALlMhs(){
@@ -195,6 +205,7 @@ public class AdminActivity extends AppCompatActivity {
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(_StringRequest);
+        _MahasiswaAdapter.notifyDataSetChanged();
     }
 
     private void unbanMhs(){
@@ -236,7 +247,91 @@ public class AdminActivity extends AppCompatActivity {
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(_StringRequest);
+        _MahasiswaAdapter.notifyDataSetChanged();
     }
+
+    public static void banMhsStatic(String nama,String url,Context context){
+        StringRequest _StringRequest = new StringRequest(
+                Request.Method.POST,
+                url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        System.out.println(response);
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            int code = jsonObject.getInt("code");
+                            String message = jsonObject.getString("message");
+                            System.out.println(message);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                //handle error
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        System.out.println(error);
+                    }
+                }
+        ){
+            @Nullable
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> params = new HashMap<>();
+                params.put("function","banmhs");
+                params.put("username",nama);
+                return params;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        requestQueue.add(_StringRequest);
+
+    }
+
+    public static void unbanMhsStatic(String nama,String url,Context context){
+        StringRequest _StringRequest = new StringRequest(
+                Request.Method.POST,
+                url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        System.out.println(response);
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            int code = jsonObject.getInt("code");
+                            String message = jsonObject.getString("message");
+                            System.out.println(message);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                //handle error
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        System.out.println(error);
+                    }
+                }
+        ){
+            @Nullable
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> params = new HashMap<>();
+                params.put("function","unbanmhs");
+                params.put("username",nama);
+                return params;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        requestQueue.add(_StringRequest);
+    }
+
+
 
     private void addTOArray(String a,String b,String c)
     {

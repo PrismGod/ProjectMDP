@@ -41,7 +41,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Ban / unban"
+        android:hint="Ban / unban via ketik nama"
         android:inputType="textPersonName" />
 
     <LinearLayout

@@ -33,7 +33,7 @@ public class MahasiswaAdapter extends RecyclerView.Adapter<MahasiswaAdapter.Maha
     TextView tname,tpass,tstatus;
     Button b1,b2;
     Context base;
-    public String url=AdminActivity.urldatabase;
+    public String url;
 
     public MahasiswaAdapter(ArrayList<Mahasiswa> listMhs) {
         this.listMhs = listMhs;
@@ -46,7 +46,7 @@ public class MahasiswaAdapter extends RecyclerView.Adapter<MahasiswaAdapter.Maha
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.mhs_item, parent, false);
         MahasiswaViewHolder viewHolder = new MahasiswaViewHolder(view);
         base = parent.getContext();
-
+        url=AdminActivity.urldatabase;
         return viewHolder;
     }
 
@@ -74,14 +74,14 @@ public class MahasiswaAdapter extends RecyclerView.Adapter<MahasiswaAdapter.Maha
             b1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    banMhs();
+                    AdminActivity.banMhsStatic(tname.getText().toString(),AdminActivity.urldatabase,base);
                 }
             });
 
             b2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    unbanMhs();
+                    AdminActivity.unbanMhsStatic(tname.getText().toString(),AdminActivity.urldatabase,base);
                 }
             });
         }
@@ -98,111 +98,97 @@ public class MahasiswaAdapter extends RecyclerView.Adapter<MahasiswaAdapter.Maha
             {
                 tstatus.setText("Status : Active");
             }
-
-            b1.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                }
-            });
-
-            b2.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                }
-            });
         }
     }
 
-    private void banMhs(){
-        StringRequest _StringRequest = new StringRequest(
-                Request.Method.POST,
-                url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        System.out.println(response);
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            int code = jsonObject.getInt("code");
-                            String message = jsonObject.getString("message");
-                            toaster(message);
-                            System.out.println(message);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                //handle error
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        System.out.println(error);
-                    }
-                }
-        ){
-            @Nullable
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String,String> params = new HashMap<>();
-                params.put("function","banmhs");
-                params.put("username",tname.getText().toString());
-                return params;
-            }
-        };
+//    private void banMhs(){
+//        StringRequest _StringRequest = new StringRequest(
+//                Request.Method.POST,
+//                url,
+//                new Response.Listener<String>() {
+//                    @Override
+//                    public void onResponse(String response) {
+//                        System.out.println(response);
+//                        try {
+//                            JSONObject jsonObject = new JSONObject(response);
+//                            int code = jsonObject.getInt("code");
+//                            String message = jsonObject.getString("message");
+//                            toaster(message);
+//                            System.out.println(message);
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                },
+//                //handle error
+//                new Response.ErrorListener() {
+//                    @Override
+//                    public void onErrorResponse(VolleyError error) {
+//                        System.out.println(error);
+//                    }
+//                }
+//        ){
+//            @Nullable
+//            @Override
+//            protected Map<String, String> getParams() throws AuthFailureError {
+//                Map<String,String> params = new HashMap<>();
+//                params.put("function","banmhs");
+//                params.put("username",tname.getText().toString());
+//                return params;
+//            }
+//        };
+//
+//        RequestQueue requestQueue = Volley.newRequestQueue(base);
+//        requestQueue.add(_StringRequest);
+//    }
 
-        RequestQueue requestQueue = Volley.newRequestQueue(base);
-        requestQueue.add(_StringRequest);
-    }
+//    private void unbanMhs(){
+//        StringRequest _StringRequest = new StringRequest(
+//                Request.Method.POST,
+//                url,
+//                new Response.Listener<String>() {
+//                    @Override
+//                    public void onResponse(String response) {
+//                        System.out.println(response);
+//                        try {
+//                            JSONObject jsonObject = new JSONObject(response);
+//                            int code = jsonObject.getInt("code");
+//                            String message = jsonObject.getString("message");
+//                            toaster(message);
+//                            System.out.println(message);
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                },
+//                //handle error
+//                new Response.ErrorListener() {
+//                    @Override
+//                    public void onErrorResponse(VolleyError error) {
+//                        System.out.println(error);
+//                    }
+//                }
+//        ){
+//            @Nullable
+//            @Override
+//            protected Map<String, String> getParams() throws AuthFailureError {
+//                Map<String,String> params = new HashMap<>();
+//                params.put("function","unbanmhs");
+//                params.put("username",tname.getText().toString());
+//                return params;
+//            }
+//        };
+//
+//        RequestQueue requestQueue = Volley.newRequestQueue(base);
+//        requestQueue.add(_StringRequest);
+//    }
 
-    private void unbanMhs(){
-        StringRequest _StringRequest = new StringRequest(
-                Request.Method.POST,
-                url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        System.out.println(response);
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            int code = jsonObject.getInt("code");
-                            String message = jsonObject.getString("message");
-                            toaster(message);
-                            System.out.println(message);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                //handle error
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        System.out.println(error);
-                    }
-                }
-        ){
-            @Nullable
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String,String> params = new HashMap<>();
-                params.put("function","unbanmhs");
-                params.put("username",tname.getText().toString());
-                return params;
-            }
-        };
-
-        RequestQueue requestQueue = Volley.newRequestQueue(base);
-        requestQueue.add(_StringRequest);
-    }
-
-    public void toaster(String a)
-    {
-        Context context = base;
-        CharSequence text = a;
-        int duration = Toast.LENGTH_SHORT;
-        Toast toast = Toast.makeText(context, text, duration);
-        toast.show();
-    }
+//    public void toaster(String a)
+//    {
+//        Context context = base;
+//        CharSequence text = a;
+//        int duration = Toast.LENGTH_SHORT;
+//        Toast toast = Toast.makeText(context, text, duration);
+//        toast.show();
+//    }
 }
