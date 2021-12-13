@@ -33,21 +33,21 @@
                     $response["code"] = 13;
                     $response["message"] = "Login Successful As Admin";
                 } else {
-                    $sql_query = "SELECT * FROM users WHERE username = '$username' AND password = '$password'";
-                    $result = $conn->query($sql_query)->fetch_object();
-                    if ($result == null){
+                    $sql_query = "SELECT * FROM users WHERE username = '$username' AND password = '$password' AND banned = 0";
+                    $result = mysqli_query($conn, $sql_query);
+                    $sql_query2 = "SELECT * FROM users WHERE username = '$username' AND password = '$password' AND banned = 1";
+                    $result2 = mysqli_query($conn, $sql_query2);
+                    if (mysqli_num_rows($result) > 0) {
+                        $response["code"] = 1;
+                        $response["message"] = "Login Successful As User";
+                    }
+                    else if (mysqli_num_rows($result2) > 0) {
+                        $response["code"] = -4;
+                        $response["message"] = "User Is banned please contact admin";
+                    }
+                    else {
                         $response["code"] = -3;
                         $response["message"] = "Invalid Username or Password";
-                    }
-                    else{
-                        if ($result->banned == 0){
-                            $response["code"] = 1;
-                            $response["message"] = $result->username;
-                        }
-                        else{
-                            $response["code"] = -4;
-                            $response["message"] = "Your Account is Banned";
-                        }
                     }
                 }
             } else {
@@ -97,7 +97,7 @@
                 $response["message"] = "Data Inserted!";
             } else {
                 $response["code"] = -3;
-                $response["message"] = "User Already Exist";
+                $response["message"] = "User Allready Exist";
             }
         } else {
             $response["code"] = -2;
@@ -133,29 +133,35 @@
 
     function banMahasiswa($conn) {
         $username = $_POST["username"];
-        $sql_query = "UPDATE `users` SET `banned` = '1' WHERE `username` = '$username' ";
+        $usernamesubstr = substr("$username",11);
+        $sql_query = "UPDATE `users` SET `banned` = '1' WHERE `username` = '$usernamesubstr' ";
         $query = mysqli_query($conn, $sql_query );
         if ($query) {
             $response["code"] = 1;
-            $response["message"] = "User Banned!";
+            $response["message"] = "$username User Unbanned!";
         } else {
             $response["code"] = -3;
-            $response["message"] = "User Ban Failed!";
+            $response["message"] = "$username User Unban Failed!";
         }
         echo json_encode($response);
     }
 
     function unbanMahasiswa($conn) {
-        $username = $_POST["username"];
-        $sql_query = "UPDATE `users` SET `banned` = '0' WHERE `username` = '$username' ";
+        $username = $_POST["u"];
+        $usernamesubstr = substr("$username",11);
+        // $sql_query = "UPDATE `users` SET `banned` = '0' WHERE `username` = '$username' ";
+
+
+        $sql_query = "UPDATE `users` SET `banned` = '0' WHERE `username` = '$usernamesubstr' ";
         $query = mysqli_query($conn, $sql_query );
         if ($query) {
             $response["code"] = 1;
-            $response["message"] = "User Unbanned!";
+            $response["message"] = "$username User Unbanned!";
         } else {
             $response["code"] = -3;
-            $response["message"] = "User Unban Failed!";
+            $response["message"] = "$username User Unban Failed!";
         }
+
         echo json_encode($response);
     }
 ?>

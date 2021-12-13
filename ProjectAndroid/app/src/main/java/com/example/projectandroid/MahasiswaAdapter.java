@@ -97,9 +97,12 @@ public class MahasiswaAdapter extends RecyclerView.Adapter<MahasiswaAdapter.Maha
             else
             {
                 tstatus.setText("Status : Active");
+
             }
         }
     }
+
+
 
 //    private void banMhs(){
 //        StringRequest _StringRequest = new StringRequest(

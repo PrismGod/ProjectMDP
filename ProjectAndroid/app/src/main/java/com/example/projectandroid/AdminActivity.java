@@ -109,6 +109,8 @@ public class AdminActivity extends AppCompatActivity {
         });
     }
 
+
+
     private void getALlMhs(){
         StringRequest _StringRequest = new StringRequest(
                 Request.Method.POST,
@@ -163,7 +165,9 @@ public class AdminActivity extends AppCompatActivity {
             }
         };
             RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.getCache().clear();
         requestQueue.add(_StringRequest);
+
     }
 
     private void banMhs(){
@@ -322,7 +326,7 @@ public class AdminActivity extends AppCompatActivity {
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String,String> params = new HashMap<>();
                 params.put("function","unbanmhs");
-                params.put("username",nama);
+                params.put("u",nama);
                 return params;
             }
         };
@@ -347,6 +351,8 @@ public class AdminActivity extends AppCompatActivity {
         Toast toast = Toast.makeText(context, text, duration);
         toast.show();
     }
+
+
 }
 
 
