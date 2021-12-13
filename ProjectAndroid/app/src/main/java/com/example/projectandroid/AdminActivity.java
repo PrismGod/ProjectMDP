@@ -326,7 +326,7 @@ public class AdminActivity extends AppCompatActivity {
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String,String> params = new HashMap<>();
                 params.put("function","unbanmhs");
-                params.put("u",nama);
+                params.put("username",nama);
                 return params;
             }
         };
