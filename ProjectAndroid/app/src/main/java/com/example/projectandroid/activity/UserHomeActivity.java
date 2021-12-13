@@ -5,13 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.projectandroid.R;
-import com.example.projectandroid.databinding.ActivityLoginBinding;
 import com.example.projectandroid.databinding.ActivityUserHomeBinding;
 import com.example.projectandroid.fragment.UserFavoriteFragment;
 import com.example.projectandroid.fragment.UserHomeFragment;
@@ -81,6 +81,12 @@ public class UserHomeActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.optionLogout){
+            // hapus sharedpreference buat auto login
+            SharedPreferences sharedPreferences = getSharedPreferences("autoLogin", MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.clear();
+            editor.apply();
+
             Intent intent = new Intent(UserHomeActivity.this, LoginActivity.class);
             startActivity(intent);
             finish();

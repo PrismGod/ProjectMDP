@@ -4,6 +4,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -83,6 +84,13 @@ public class LoginActivity extends AppCompatActivity {
                             }
                             else if(code==1) {
                                 String username = jsonObject.getString("message");
+
+                                // pake sharedpreference buat auto login
+                                SharedPreferences sharedPreferences = getSharedPreferences("autoLogin", MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putString("username", username);
+                                editor.apply();
+
                                 Intent i = new Intent(LoginActivity.this, UserHomeActivity.class);
                                 i.putExtra("auth", username);
                                 startActivity(i);
