@@ -202,7 +202,7 @@ public class AdminActivity extends AppCompatActivity {
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String,String> params = new HashMap<>();
                 params.put("function","banmhs");
-                params.put("username",tv.getText().toString());
+                params.put("username","Username : "+tv.getText().toString());
                 return params;
             }
         };
@@ -244,7 +244,7 @@ public class AdminActivity extends AppCompatActivity {
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String,String> params = new HashMap<>();
                 params.put("function","unbanmhs");
-                params.put("username",tv.getText().toString());
+                params.put("username","Username : "+ tv.getText().toString());
                 return params;
             }
         };
